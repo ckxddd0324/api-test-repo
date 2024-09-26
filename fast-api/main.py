@@ -1,64 +1,57 @@
 import coverage
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List
+from fastapi import FastAPI
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.responses import JSONResponse
+from fastapi.openapi.utils import get_openapi
+from services.users import user_router
+from services.items import item_router
 
 # Start coverage monitoring
 cov = coverage.Coverage()
 cov.start()
 
-app = FastAPI()
+# Main FastAPI instance
+app = FastAPI(title="Main API")
 
-# Define a simple model for our data
-class Item(BaseModel):
-    id: int
-    name: str
-    description: str = None
-    price: float
-    tax: float = None
+# Include the routers for each service
+app.include_router(user_router, prefix="/users")
+app.include_router(item_router, prefix="/items")
 
-# In-memory "database"
-items = []
-
-# Create (POST) - Add a new item
-@app.post("/items/", response_model=Item)
-def create_item(item: Item):
-    items.append(item)
-    return item
-
-# Read (GET) - Get all items
-@app.get("/items/", response_model=List[Item])
-def get_items():
-    return items
-
-# Read (GET) - Get a specific item by ID
-@app.get("/items/{item_id}", response_model=Item)
-def get_item(item_id: int):
-    for item in items:
-        if item.id == item_id:
-            return item
-    raise HTTPException(status_code=404, detail="Item not found")
-
-# Update (PUT) - Update an item by ID
-@app.put("/items/{item_id}", response_model=Item)
-def update_item(item_id: int, updated_item: Item):
-    for index, item in enumerate(items):
-        if item.id == item_id:
-            items[index] = updated_item
-            return updated_item
-    raise HTTPException(status_code=404, detail="Item not found")
-
-# Delete (DELETE) - Remove an item by ID
-@app.delete("/items/{item_id}")
-def delete_item(item_id: int):
-    for index, item in enumerate(items):
-        if item.id == item_id:
-            items.pop(index)
-            return {"detail": "Item deleted"}
-    raise HTTPException(status_code=404, detail="Item not found")
+# Custom OpenAPI endpoint for the main app
 
 
-@app.on_event("shutdown")
-def shutdown_event():
-    cov.stop()
-    cov.save()
+@app.get("/openapi.json", include_in_schema=False)
+async def get_openapi_json():
+    return JSONResponse(app.openapi())
+
+# Custom Swagger UI for the main app
+
+
+@app.get("/docs", include_in_schema=False)
+async def get_swagger_ui():
+    urls = [
+        {"url": "/users/openapi.json", "name": "User Service"},
+        {"url": "/items/openapi.json", "name": "Item Service"}
+    ]
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="API Documentation",
+        swagger_js_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js",
+        swagger_css_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css",
+        swagger_ui_parameters={
+            "urls": urls,
+            "deepLinking": True,
+        },
+    )
+
+# Serve OpenAPI schemas for each service
+
+
+@app.get("/users/openapi.json", include_in_schema=False)
+async def get_user_openapi():
+    return JSONResponse(user_router.openapi())
+
+
+@app.get("/items/openapi.json", include_in_schema=False)
+async def get_item_openapi():
+    return JSONResponse(item_router.openapi())
