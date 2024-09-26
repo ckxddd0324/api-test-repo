@@ -1,0 +1,10 @@
+# API Development and Testing Guide
+
+## Generate Axios Code
+node generateAxios.js        
+
+## Run Test Command
+npm test -- tests/users.test.js
+
+## Download OpenAPI YAML
+node utils/download_openapi.js
