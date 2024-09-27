@@ -8,20 +8,26 @@ export const getItems = async (request, {} = {}) => {
   let url = `/items/`;
 
   const res = await request.get(url);
+
   return res;
 };
 
 /**
  * Create Item
- * @param {object} body - Request body
- * @param {object} body - Request body properties
- * @returns {Promise<object>} Successful Response (HTTP 200)
+ * @requestBody {object} body - The body of the request
+ * @property {integer} body.id -
+ * @property {string} body.name -
+ * @property {string} body.description -
+ * @property {number} body.price -
+ * @property {number} body.tax -
+ * @returns {Promise<object>} Successful Response (HTTP 201)
  * @returns {Promise<object>} Validation Error (HTTP 422)
  */
 export const createItem = async (request, { body } = {}) => {
   let url = `/items/`;
 
   const res = await request.post(url, body || {});
+
   return res;
 };
 
@@ -38,14 +44,28 @@ export const getItemById = async (request, { item_id } = {}) => {
   url = url.replace('{item_id}', item_id);
 
   const res = await request.get(url);
+
+  // Validate response against Item schema
+  const schema = require('../schemas/Item.json');
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const valid = validate(res.body);
+  if (!valid) {
+    console.error('Schema validation failed:', validate.errors);
+  }
+
   return res;
 };
 
 /**
  * Update Item
  * @param {string} item_id - Path parameter
- * @param {object} body - Request body
- * @param {object} body - Request body properties
+ * @requestBody {object} body - The body of the request
+ * @property {integer} body.id -
+ * @property {string} body.name -
+ * @property {string} body.description -
+ * @property {number} body.price -
+ * @property {number} body.tax -
  * @returns {Promise<object>} Successful Response (HTTP 200)
  * @returns {Promise<object>} Validation Error (HTTP 422)
  */
@@ -56,6 +76,16 @@ export const updateItem = async (request, { item_id, body } = {}) => {
   url = url.replace('{item_id}', item_id);
 
   const res = await request.put(url, body || {});
+
+  // Validate response against Item schema
+  const schema = require('../schemas/Item.json');
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const valid = validate(res.body);
+  if (!valid) {
+    console.error('Schema validation failed:', validate.errors);
+  }
+
   return res;
 };
 
@@ -72,5 +102,6 @@ export const deleteItem = async (request, { item_id } = {}) => {
   url = url.replace('{item_id}', item_id);
 
   const res = await request.delete(url);
+
   return res;
 };

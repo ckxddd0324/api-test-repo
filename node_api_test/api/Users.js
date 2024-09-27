@@ -8,20 +8,25 @@ export const readUsers = async (request, {} = {}) => {
   let url = `/users/`;
 
   const res = await request.get(url);
+
   return res;
 };
 
 /**
  * Create User
- * @param {object} body - Request body
- * @param {object} body - Request body properties
- * @returns {Promise<object>} Successful Response (HTTP 200)
+ * @requestBody {object} body - The body of the request
+ * @property {integer} body.id -
+ * @property {string} body.username -
+ * @property {string} body.email -
+ * @property {unknown} body.full_name -
+ * @returns {Promise<object>} Successful Response (HTTP 201)
  * @returns {Promise<object>} Validation Error (HTTP 422)
  */
 export const createUser = async (request, { body } = {}) => {
   let url = `/users/`;
 
   const res = await request.post(url, body || {});
+
   return res;
 };
 
@@ -38,14 +43,27 @@ export const readUser = async (request, { user_id } = {}) => {
   url = url.replace('{user_id}', user_id);
 
   const res = await request.get(url);
+
+  // Validate response against User schema
+  const schema = require('../schemas/User.json');
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const valid = validate(res.body);
+  if (!valid) {
+    console.error('Schema validation failed:', validate.errors);
+  }
+
   return res;
 };
 
 /**
  * Update User
  * @param {string} user_id - Path parameter
- * @param {object} body - Request body
- * @param {object} body - Request body properties
+ * @requestBody {object} body - The body of the request
+ * @property {integer} body.id -
+ * @property {string} body.username -
+ * @property {string} body.email -
+ * @property {unknown} body.full_name -
  * @returns {Promise<object>} Successful Response (HTTP 200)
  * @returns {Promise<object>} Validation Error (HTTP 422)
  */
@@ -56,6 +74,16 @@ export const updateUser = async (request, { user_id, body } = {}) => {
   url = url.replace('{user_id}', user_id);
 
   const res = await request.put(url, body || {});
+
+  // Validate response against User schema
+  const schema = require('../schemas/User.json');
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const valid = validate(res.body);
+  if (!valid) {
+    console.error('Schema validation failed:', validate.errors);
+  }
+
   return res;
 };
 
@@ -72,5 +100,15 @@ export const deleteUser = async (request, { user_id } = {}) => {
   url = url.replace('{user_id}', user_id);
 
   const res = await request.delete(url);
+
+  // Validate response against User schema
+  const schema = require('../schemas/User.json');
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const valid = validate(res.body);
+  if (!valid) {
+    console.error('Schema validation failed:', validate.errors);
+  }
+
   return res;
 };
