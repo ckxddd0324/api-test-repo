@@ -1,0 +1,34 @@
+{
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "username": {
+      "type": "string",
+      "title": "Username"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "full_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Full Name"
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "username",
+    "email"
+  ],
+  "title": "User"
+}

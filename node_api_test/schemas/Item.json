@@ -1,0 +1,31 @@
+{
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "price": {
+      "type": "number",
+      "title": "Price"
+    },
+    "tax": {
+      "type": "number",
+      "title": "Tax"
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "price"
+  ],
+  "title": "Item"
+}

@@ -10,13 +10,13 @@ paths:
       summary: Read Users
       operationId: read_users_users__get
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
                 type: array
                 title: Response Read Users Users  Get
     post:
@@ -28,21 +28,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
         required: true
       responses:
-        '200':
+        "201":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '422':
+                $ref: "#/components/schemas/User"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
   /users/{user_id}:
     get:
       tags:
@@ -57,18 +57,18 @@ paths:
             type: integer
             title: User Id
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '422':
+                $ref: "#/components/schemas/User"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
     put:
       tags:
         - Users
@@ -86,20 +86,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '422':
+                $ref: "#/components/schemas/User"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
     delete:
       tags:
         - Users
@@ -113,18 +113,18 @@ paths:
             type: integer
             title: User Id
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '422':
+                $ref: "#/components/schemas/User"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
   /items/:
     get:
       tags:
@@ -132,13 +132,13 @@ paths:
       summary: Get Items
       operationId: get_items_items__get
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Item'
+                  $ref: "#/components/schemas/Item"
                 type: array
                 title: Response Get Items Items  Get
     post:
@@ -150,21 +150,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Item'
+              $ref: "#/components/schemas/Item"
         required: true
       responses:
-        '200':
+        "201":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
-        '422':
+                $ref: "#/components/schemas/Item"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
   /items/{item_id}:
     get:
       tags:
@@ -180,18 +180,18 @@ paths:
             exclusiveMinimum: 0
             title: Item Id
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
-        '422':
+                $ref: "#/components/schemas/Item"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
     put:
       tags:
         - Items
@@ -209,20 +209,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Item'
+              $ref: "#/components/schemas/Item"
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
-        '422':
+                $ref: "#/components/schemas/Item"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
     delete:
       tags:
         - Items
@@ -236,24 +236,24 @@ paths:
             type: integer
             title: Item Id
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema: {}
-        '422':
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
 components:
   schemas:
     HTTPValidationError:
       properties:
         detail:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: "#/components/schemas/ValidationError"
           type: array
           title: Detail
       type: object
@@ -295,7 +295,7 @@ components:
         full_name:
           anyOf:
             - type: string
-            - type: 'null'
+            - type: "null"
           title: Full Name
       type: object
       required:
