@@ -1,4 +1,5 @@
 // API functions for Items
+import jsf from "json-schema-faker";
 
 /**
  * Get Items
@@ -32,6 +33,17 @@ export const createItem = async (request, { body } = {}) => {
 };
 
 /**
+ * Generate a sample payload for createItem
+ * @param {object} [overrides] - Optional overrides for the generated payload
+ * @returns {object} Sample payload
+ */
+export const generateCreateItemPayload = (overrides = {}) => {
+  const schema = require("../schemas/Item.json");
+  const payload = jsf.generate(schema);
+  return { ...payload, ...overrides };
+};
+
+/**
  * Get Item By Id
  * @param {string} item_id - Path parameter
  * @returns {Promise<object>} Successful Response (HTTP 200)
@@ -41,17 +53,17 @@ export const getItemById = async (request, { item_id } = {}) => {
   let url = `/items/{item_id}`;
 
   // Replace path parameters
-  url = url.replace('{item_id}', item_id);
+  url = url.replace("{item_id}", item_id);
 
   const res = await request.get(url);
 
   // Validate response against Item schema
-  const schema = require('../schemas/Item.json');
+  const schema = require("../schemas/Item.json");
   const ajv = new Ajv();
   const validate = ajv.compile(schema);
   const valid = validate(res.body);
   if (!valid) {
-    console.error('Schema validation failed:', validate.errors);
+    console.error("Schema validation failed:", validate.errors);
   }
 
   return res;
@@ -73,20 +85,31 @@ export const updateItem = async (request, { item_id, body } = {}) => {
   let url = `/items/{item_id}`;
 
   // Replace path parameters
-  url = url.replace('{item_id}', item_id);
+  url = url.replace("{item_id}", item_id);
 
   const res = await request.put(url, body || {});
 
   // Validate response against Item schema
-  const schema = require('../schemas/Item.json');
+  const schema = require("../schemas/Item.json");
   const ajv = new Ajv();
   const validate = ajv.compile(schema);
   const valid = validate(res.body);
   if (!valid) {
-    console.error('Schema validation failed:', validate.errors);
+    console.error("Schema validation failed:", validate.errors);
   }
 
   return res;
+};
+
+/**
+ * Generate a sample payload for updateItem
+ * @param {object} [overrides] - Optional overrides for the generated payload
+ * @returns {object} Sample payload
+ */
+export const generateUpdateItemPayload = (overrides = {}) => {
+  const schema = require("../schemas/Item.json");
+  const payload = jsf.generate(schema);
+  return { ...payload, ...overrides };
 };
 
 /**
@@ -99,7 +122,7 @@ export const deleteItem = async (request, { item_id } = {}) => {
   let url = `/items/{item_id}`;
 
   // Replace path parameters
-  url = url.replace('{item_id}', item_id);
+  url = url.replace("{item_id}", item_id);
 
   const res = await request.delete(url);
 

@@ -1,8 +1,9 @@
 import fs from "fs";
-import { join, resolve } from "path"; // Import 'join' and 'resolve' from 'path' core module
+import { join, resolve } from "path";
 import yaml from "yaml";
 import prettier from "prettier";
 import Ajv from "ajv";
+import jsf from "json-schema-faker";
 
 // Read OpenAPI YAML file
 const openapiFile = fs.readFileSync("openapi.yaml", "utf8");
@@ -91,6 +92,7 @@ const generateJSDoc = (
   docLines.push(" */");
   return docLines.join("\n");
 };
+
 // Function to generate function code
 const generateFunction = (
   jsdoc,
@@ -151,6 +153,20 @@ const generateFunction = (
       }
 
       return res;
+    };
+`;
+
+// Function to generate payload generator function code
+const generatePayloadFunction = (functionName, schemaName) => `
+    /**
+     * Generate a sample payload for ${functionName}
+     * @param {object} [overrides] - Optional overrides for the generated payload
+     * @returns {object} Sample payload
+     */
+    export const generate${functionName.charAt(0).toUpperCase() + functionName.slice(1)}Payload = (overrides = {}) => {
+      const schema = require('../schemas/${schemaName}.json');
+      const payload = jsf.generate(schema);
+      return { ...payload, ...overrides };
     };
 `;
 
@@ -235,6 +251,17 @@ Object.keys(openapiSpec.paths).forEach((path) => {
       }
       tagFunctions[tag].push(func);
     });
+
+    // Generate payload function if requestBody exists
+    if (requestBody) {
+      const bodySchemaName = requestBody.content["application/json"].schema.$ref
+        .split("/")
+        .pop();
+      const payloadFunc = generatePayloadFunction(functionName, bodySchemaName);
+      tags.forEach((tag) => {
+        tagFunctions[tag].push(payloadFunc);
+      });
+    }
   });
 });
 
@@ -242,6 +269,7 @@ Object.keys(openapiSpec.paths).forEach((path) => {
 Object.keys(tagFunctions).forEach(async (tag) => {
   const tagFilePath = join(apiFolder, `${tag}.js`);
   let fileContent = `// API functions for ${tag}
+import jsf from 'json-schema-faker';
 ${tagFunctions[tag].join("\n")}
 `;
 

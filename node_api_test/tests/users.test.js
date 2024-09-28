@@ -1,5 +1,5 @@
 import axios from "axios";
-import { readUsers, createUser } from "../api/Users";
+import { readUsers, createUser, generateCreateUserPayload } from "../api/Users";
 
 // Configure axios for the local server
 const api = axios.create({
@@ -13,7 +13,8 @@ describe("Users API", () => {
   describe("readUsers", () => {
     it("fetches users successfully", async () => {
       const response = await readUsers(api);
-
+      const payload = generateCreateUserPayload();
+      console.log(payload);
       expect(response.status).toBe(200);
       expect(Array.isArray(response.data)).toBe(true);
       // Add more specific assertions based on your API's response structure

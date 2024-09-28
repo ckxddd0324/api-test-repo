@@ -1,4 +1,5 @@
 // API functions for Users
+import jsf from 'json-schema-faker';
 
 /**
  * Read Users
@@ -28,6 +29,17 @@ export const createUser = async (request, { body } = {}) => {
   const res = await request.post(url, body || {});
 
   return res;
+};
+
+/**
+ * Generate a sample payload for createUser
+ * @param {object} [overrides] - Optional overrides for the generated payload
+ * @returns {object} Sample payload
+ */
+export const generateCreateUserPayload = (overrides = {}) => {
+  const schema = require('../schemas/User.json');
+  const payload = jsf.generate(schema);
+  return { ...payload, ...overrides };
 };
 
 /**
@@ -85,6 +97,17 @@ export const updateUser = async (request, { user_id, body } = {}) => {
   }
 
   return res;
+};
+
+/**
+ * Generate a sample payload for updateUser
+ * @param {object} [overrides] - Optional overrides for the generated payload
+ * @returns {object} Sample payload
+ */
+export const generateUpdateUserPayload = (overrides = {}) => {
+  const schema = require('../schemas/User.json');
+  const payload = jsf.generate(schema);
+  return { ...payload, ...overrides };
 };
 
 /**
